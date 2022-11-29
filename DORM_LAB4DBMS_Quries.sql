@@ -3,6 +3,8 @@
 Q1)	You are required to create tables for supplier,customer,category,product,
 supplier_pricing,order,rating to store the data for the E-commerce with the schema definition given below.
 
+use `order-directory`; 
+
 
 CREATE TABLE IF NOT EXISTS supplier(
     SUPP_ID int primary key,
@@ -217,7 +219,11 @@ select * from supplier where supp_id in (select supp_id from supplier_pricing gr
 
 Q6 )Find the least expensive product from each category and print the table with category id, name, product name and price of the product
 
-
+select pp.Cat_ID, c.cat_name, ss.PRICING_ID,pp.PRO_ID,pp.Pro_name , MIN(SUPP_PRICE) MinPrice 
+from supplier_pricing ss 
+INNER JOIN PRODUCT pp ON pp.Pro_ID = ss.Pro_ID
+INNER JOIN Category c ON c.cat_Id = pp.Cat_ID
+ GROUP BY pp.Cat_ID;
 
 
 
