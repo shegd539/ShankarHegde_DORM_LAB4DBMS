@@ -1,8 +1,8 @@
 
-
+/*
 Q1)	You are required to create tables for supplier,customer,category,product,
 supplier_pricing,order,rating to store the data for the E-commerce with the schema definition given below.
-
+*/
 use `order-directory`; 
 
 
@@ -76,13 +76,12 @@ CREATE TABLE IF NOT EXISTS rating (
     FOREIGN KEY (ORD_ID) REFERENCES `order`(ORD_ID)
 );
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-
+/*
 Q2) INSERT INTO TABLE
-
+*/
 
 INSERT INTO SUPPLIER VALUES(1,"Rajesh Retails","Delhi",'1234567890');
 INSERT INTO SUPPLIER VALUES(2,"Appario Ltd.","Mumbai",'2589631470');
@@ -183,9 +182,9 @@ INSERT INTO RATING VALUES(16,116,0);
 
 
 
-
+/*
 Q3) Display the total number of customers based on gender who have placed orders of worth at least Rs.3000.
-
+*/
 select c.Cus_Gender, COUNT(o.Cus_ID) As CountCustomer
 from `order` o
 INNER JOIN (select pricing_id, SUM(SUPP_PRICE) As tPrice
@@ -193,9 +192,9 @@ from supplier_pricing GROUP BY pricing_id HAVING tPrice >= 3000) sp ON sp.pricin
 INNER JOIN Customer c ON c.Cus_ID = o.Cus_ID
 GROUP BY C.Cus_Gender;
 
-
+/*
 Q4)	Display all the orders along with product name ordered by a customer having Customer_Id=2
-
+*/
 select 
 o.*, p.PRO_Name
 -- o.Ord_ID, o.ORD_Date, s.Supp_Name, p.PRO_Name, p.Pro_Desc
@@ -206,9 +205,9 @@ INNER JOIN product p ON p.Pro_ID = sp.PRO_ID
 -- INNER JOIN customer c ON c.CUS_ID = o.CUS_ID
 where o.CUS_ID = 2;
 
-
+/*
 Q5)	Display the Supplier details who can supply more than one product.
-
+*/
 select * from Supplier where Supp_ID IN (
 select SUPP_ID from (select SUPP_ID, COUNT(SUPP_ID) as Cnt from Supplier_pricing GROUP BY Supp_ID) ss where ss.Cnt > 1);
 
@@ -216,9 +215,9 @@ select SUPP_ID from (select SUPP_ID, COUNT(SUPP_ID) as Cnt from Supplier_pricing
 
 select * from supplier where supp_id in (select supp_id from supplier_pricing group by supp_id having count(supp_id)> 1);
 
-
+/*
 Q6 )Find the least expensive product from each category and print the table with category id, name, product name and price of the product
-
+*/
 select pp.Cat_ID, c.cat_name, ss.PRICING_ID,pp.PRO_ID,pp.Pro_name , MIN(SUPP_PRICE) MinPrice 
 from supplier_pricing ss 
 INNER JOIN PRODUCT pp ON pp.Pro_ID = ss.Pro_ID
@@ -226,9 +225,9 @@ INNER JOIN Category c ON c.cat_Id = pp.Cat_ID
  GROUP BY pp.Cat_ID;
 
 
-
+/*
 Q7)	Display the Id and Name of the Product ordered after “2021-10-05”.
-
+*/
 select sp.pro_id, p.Pro_Name
 from `order` o
 inner join SUPPLIER_pricing sp ON sp.Pricing_ID = o.Pricing_ID
@@ -242,14 +241,15 @@ select pro_id,pro_name from product as p where pro_id in
 (select pro_id from supplier_pricing as sp where pricing_id in 
 (select pricing_id from `order` as o where ord_date > "2021-10-05"));
 
-
+/*
 Q8)	Display customer name and gender whose names start or end with character 'A'
-
+*/
 select cus_name, Cus_Gender from customer where cus_name LIKE  'A%' or cus_name LIKE '%A';
-
-Q9)	/* Create a stored procedure to display supplier id, name, rating and Type_of_Service.
+/*
+Q9)	 Create a stored procedure to display supplier id, name, rating and Type_of_Service.
  For Type_of_Service, If rating =5, print “Excellent Service”,If rating >4 print “Good Service”, 
  If rating >2 print “Average Service” else print “Poor Service”. */
+ 
 delimiter $$
 ALTER procedure Rating_procedure()
 begin
